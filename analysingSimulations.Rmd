@@ -1,0 +1,50 @@
+---
+title: "Analysing data"
+author: "Alexis Derumigny"
+date: "03/03/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=TRUE}
+library(tidyverse)
+```
+
+We first load the data of the simulations that we did.
+
+```{r loading data}
+source("loadingData.R")
+```
+
+We can now print the summary statistics.
+
+```{r summary}
+summarisedData %>%
+  select(all_of(c("n", "h", "MSE", "meanComputationTime")))
+```
+
+
+We plot now the mean-squared error as a function of the bandwidth $h$.
+
+
+```{r}
+summarisedData %>%
+  ggplot(aes(x = h, y = MSE)) +
+  geom_line() +
+  scale_x_log10() + 
+  scale_y_log10()
+```
+
+
+We can also plot the distribution of the computation time as a function of $h$.
+
+```{r}
+totalData %>% 
+  mutate( h_ = factor(h, levels = sort(unique(h))) ) %>%
+  ggplot(aes(x = h_, y = computationTime)) +
+  geom_boxplot() +
+  ylab("Computation time (s)")
+```
+
+
